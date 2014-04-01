@@ -1,5 +1,5 @@
 Name:                   directed-keys
-Version:                0.0.0
+Version:                0.1.0
 Author:                 Jeremy <jeremy.peterson@plowtech.net>
 Maintainer:             Jeremy <jeremy.peterson@plowtech.net>
 License:                BSD3
@@ -16,6 +16,10 @@ Library
   Exposed-Modules:      DirectedKeys
   Other-Modules:        DirectedKeys.Internal
   Build-Depends:        base >= 4 && < 5
+                      , base64-bytestring
+                      , cereal 
+                      , compressed 
+
 
 Test-Suite spec
   Type:                 exitcode-stdio-1.0
