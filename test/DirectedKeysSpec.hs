@@ -1,5 +1,11 @@
+{-# LANGUAGE DeriveGeneric, OverloadedStrings, NoMonomorphismRestriction #-}
 module DirectedKeysSpec (main, spec) where
-
+import DirectedKeys.Types
+import GHC.Generics
+import Data.Serialize
+import qualified Data.ByteString as BS
+import DirectedKeys
+import Test.QuickCheck
 import Test.Hspec
 
 main :: IO ()
@@ -7,58 +13,88 @@ main = hspec spec
 
 spec :: Spec
 spec = do
-  describe "encodeKey" $ do
-    it "should encode the key in a retrievable Bytestring" $ do
-      True `shouldBe` False
   describe "encodeKeyRaw" $ do
-    it "should encode the key without compression" $ do
-      True `shouldBe` False
-  describe "decodeKeyRaw" $ do
-    it "decode the Raw Key into it's constituent parts" $ do
-      True `shouldBe` False
+    it "should box the incoming source and dest into a datatype" $ do
+      let er = encodeKeyRaw a b c d
+          a = exampleKey 
+          b = exampleHost1 
+          c = exampleHost2 
+          d = exampleDate 
+      (er == exampleDirectedKey) `shouldBe` True
+
+  describe "encodeKey" $ do
+    it "turn the given Key parameters into a Serialized and compressed DirectedKey" $ do
+      testEncodeKey `shouldBe` "AAAAAAAAAEgfiwgAAAAAAAAD0zhSJHBtgYUdAwSIlJeX6yUmJhfrlhbrJefnWlkYWBhA5YTBcrmJVfl5cKmMpXNnm9z5wgkAlPPJ7kcAAAA="
+
   describe "decodeKey" $ do
     it "decode the Key into it's constituent parts" $ do
-      True `shouldBe` False
-  describe "migrateKey" $ do
-    it "should replace the source with the old dest and then replace the dest with a new dest" $ do  
-      True `shouldBe` False
+      (testDecodeKey == (Right exampleDirectedKey )) `shouldBe` True
+    it "should go back and forth between decode and encode for all inputs" $ do
+      property makeQCDirectedKey
+  -- describe "migrateKey" $ do
+  --   it "should replace the source with the old dest and then replace the dest with a new dest" $ do  
+  --     True `shouldBe` False
 
 
+newtype TestKey = TKey Int         deriving (Eq,Ord,Generic) 
+newtype TestHost = Host1 String    deriving (Eq,Ord,Generic)      
+newtype TestHost2 = Host2 String   deriving (Eq,Ord,Generic)       
+newtype InitDate = IDate Int       deriving (Eq,Ord,Generic)  
 
 
-
-import DirectedKeys
-
-
-
--- |Instances Ord, Eq, Generic
-
-
-type Entity Alarm = Entity (AlarmId) Alarm 
+makeQCDirectedKey :: Int -> Int -> Int -> Int  -> Bool 
+makeQCDirectedKey i j k l = let ky = TKey ( i ) 
+                                s = Host1 (show j) 
+                                s2 = Host2(show k) 
+                                dt = IDate (l)
+                                dkr = DKeyRaw ky s s2 dt 
+                            in (decodeKey.encodeKey $ dkr) == (Right dkr )
     
 
-type MongoDBHost = Text 
-
-type TachHost = Text 
-
-type InitDaate = Int64
-
-exampleAlarm = Entity "oAAbxkd284878" (Alarm {..} ) 
-
-exampleMongoHost = "10.61.131.97:3036"
-exampleDest = "www.amazon.com/aws/someS3Bucket"
-
-exampleNewDest = "192.168.1.43:3032"
-
-exampleTime = 82348572766
 
 
-exampleDirectedKey = DKey { 
-                       getSimpleKey = entityKey exampleAlarm , 
-                       getSource    = exampleMongoHost,
-                       getDest      = exampleDest ,
-                       getDateTime  = exampleTime 
+instance Serialize TestKey where
+instance Serialize TestHost where
+instance Serialize TestHost2 where
+instance Serialize InitDate where
+
+
+exampleHost1 :: TestHost
+exampleHost1 = Host1 "192.168.1.31:8080"  
+
+
+exampleKey :: TestKey 
+exampleKey = TKey 2937598273598273598
+
+exampleHost2 :: TestHost2
+exampleHost2 = Host2 "10.61.82.88:8080" 
+
+exampleDate :: InitDate
+exampleDate = IDate 81327582735872357385
+
+exampleDirectedKey :: DirectedKeyRaw TestKey TestHost TestHost2 InitDate
+exampleDirectedKey = DKeyRaw { 
+                       getSimpleKey = exampleKey , 
+                       getSource    = exampleHost1,
+                       getDest      = exampleHost2 ,
+                       getDateTime  = exampleDate 
                      } 
+
+testEncodeKey :: BS.ByteString 
+testEncodeKey = encodeKey exampleDirectedKey
+
+testEncodeKeyParg :: BS.ByteString 
+testEncodeKeyParg = encodeKeyPart exampleDirectedKey
+
+
+testDecodeKey :: (Either String (DirectedKeyRaw TestKey TestHost TestHost2 InitDate ))
+testDecodeKey = decodeKey "AAAAAAAAAEgfiwgAAAAAAAAD0zhSJHBtgYUdAwSIlJeX6yUmJhfrlhbrJefnWlkYWBhA5YTBcrmJVfl5cKmMpXNnm9z5wgkAlPPJ7kcAAAA="
+
+{-|
+
+
+
+
 
 
 encodedKey :: Bytestring
@@ -74,7 +110,6 @@ decodedKey = decodeKey encodedKey
 decodedKeyCompressed :: DirectedKey MongoDBHost AlarmId TachHost
 decodedKeyCompressed  = decodeKeyRaw encodedKeyRaw
 
-
-
-migratedKey = Bytestring
+migratedKey :: DirectedKey TachHost AlarmId TachHost
 migratedKey = migrateKey encodedKey exampleNewDest
+|-}

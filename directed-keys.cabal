@@ -14,11 +14,15 @@ Library
   HS-Source-Dirs:       src
   GHC-Options:          -Wall
   Exposed-Modules:      DirectedKeys
+                        DirectedKeys.Types
   Other-Modules:        DirectedKeys.Internal
   Build-Depends:        base >= 4 && < 5
                       , base64-bytestring
                       , cereal 
                       , compressed 
+                      , bytestring 
+                      , zlib
+                      
 
 
 Test-Suite spec
@@ -26,10 +30,18 @@ Test-Suite spec
   Default-Language:     Haskell2010
   Hs-Source-Dirs:       src
                       , test
+
   Ghc-Options:          -Wall
   Main-Is:              Spec.hs
   Build-Depends:        base
                       , hspec
+                      , bytestring 
+                      , base64-bytestring
+                      , QuickCheck
+                      , cereal 
+                      , compressed 
+                      , zlib
+                      
 
 Source-Repository head
   Type:                 git
