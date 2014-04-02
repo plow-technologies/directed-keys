@@ -70,8 +70,4 @@ decodedKeyCompressed :: DirectedKey MongoDBHost AlarmId TachHost
 decodedKeyCompressed  = decodeKeyRaw encodedKeyRaw
 
 
-
-migratedKey = Bytestring
-migratedKey = migrateKey encodedKey exampleNewDest
-
 ```

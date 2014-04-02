@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric, NoMonomorphismRestriction #-}
+{-# LANGUAGE DeriveGeneric, NoMonomorphismRestriction, RecordWildCards #-}
 
 module DirectedKeys (
 encodeKeyRaw
@@ -48,6 +48,7 @@ decodeKeyPart dkbs = do
 
 
 
+
 decodeKey :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) => BS.ByteString -> (Either String (DirectedKeyRaw key source destination datetime ))
 decodeKey bs = do
   dkbs <- BS_Url.decode bs
@@ -56,3 +57,5 @@ decodeKey bs = do
     where
       dkGet = S.get :: S.Get DirectedKey
       getDKLazy dk = (BSL.fromStrict . getDKString $ dk)  
+
+
