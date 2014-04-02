@@ -57,5 +57,3 @@ decodeKey bs = do
     where
       dkGet = S.get :: S.Get DirectedKey
       getDKLazy dk = (BSL.fromStrict . getDKString $ dk)  
-
-
