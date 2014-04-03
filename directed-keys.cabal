@@ -4,8 +4,8 @@ Author:                 Jeremy <jeremy.peterson@plowtech.net>
 Maintainer:             Jeremy <jeremy.peterson@plowtech.net>
 License:                BSD3
 License-File:           LICENSE
--- Synopsis:               
--- Description:            
+Synopsis:               Converts a simple key, source, destination, and datetime to a directedkey
+Description:            Converts a simple key, source, destination, and datetime to a directedkey
 Cabal-Version:          >= 1.10
 Build-Type:             Simple
 
@@ -17,11 +17,11 @@ Library
                         DirectedKeys.Types
   Other-Modules:        DirectedKeys.Internal
   Build-Depends:        base >= 4 && < 5
-                      , base64-bytestring
-                      , cereal 
-                      , compressed 
-                      , bytestring 
-                      , zlib
+                      , base64-bytestring == 1.0.0.1
+                      , cereal == 0.4.0.1
+                      , compressed == 3.10
+                      , bytestring == 0.10.0.2
+                      , zlib == 0.5.4.1
                       
 
 
@@ -35,14 +35,14 @@ Test-Suite spec
   Main-Is:              Spec.hs
   Build-Depends:        base
                       , hspec
-                      , bytestring 
-                      , base64-bytestring
-                      , QuickCheck
-                      , cereal 
-                      , compressed 
-                      , zlib
+                      , bytestring == 0.10.0.2
+                      , base64-bytestring == 1.0.0.1
+                      , QuickCheckxsx
+                      , cereal == 0.4.0.1
+                      , compressed == 3.10
+                      , zlib == 0.5.4.1
                       
 
 Source-Repository head
   Type:                 git
---  Location:             
+  Location:             https://github.com/plow-technologies/directed-keys.git
