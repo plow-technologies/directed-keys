@@ -1,5 +1,5 @@
 Name:                   directed-keys
-Version:                0.1.0
+Version:                0.1.1
 Author:                 Jeremy <jeremy.peterson@plowtech.net>
 Maintainer:             Jeremy <jeremy.peterson@plowtech.net>
 License:                BSD3
@@ -22,6 +22,7 @@ Library
                       , compressed 
                       , bytestring 
                       , zlib
+                      , containers
                       
 
 
@@ -41,6 +42,7 @@ Test-Suite spec
                       , cereal 
                       , compressed 
                       , zlib
+                      , containers
                       
 
 Source-Repository head

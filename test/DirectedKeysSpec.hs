@@ -3,7 +3,9 @@ module DirectedKeysSpec (main, spec) where
 import DirectedKeys.Types
 import GHC.Generics
 import Data.Serialize
+import qualified Data.Map as M
 import qualified Data.ByteString as BS
+import qualified Data.ByteString.Char8 as C
 import DirectedKeys
 import Test.QuickCheck
 import Test.Hspec
@@ -24,13 +26,17 @@ spec = do
 
   describe "encodeKey" $ do
     it "turn the given Key parameters into a Serialized and compressed DirectedKey" $ do
-      testEncodeKey `shouldBe` "AAAAAAAAAEgfiwgAAAAAAAAD0zhSJHBtgYUdAwSIlJeX6yUmJhfrlhbrJefnWlkYWBhA5YTBcrmJVfl5cKmMpXNnm9z5wgkAlPPJ7kcAAAA="
+      testEncodeKey `shouldBe` "AAAAAAAAAEkfiwgAAAAAAAAD0zhSJHBtgYUdAwQIGloa6RmaWegZ6hkbWlkYWBhAJQQMDfTMDPUsjPQsLMDiGUvnzja584UTAP74XXJBAAAA" -- old test string "AAAAAAAAAEgfiwgAAAAAAAAD0zhSJHBtgYUdAwSIlJeX6yUmJhfrlhbrJefnWlkYWBhA5YTBcrmJVfl5cKmMpXNnm9z5wgkAlPPJ7kcAAAA="
 
   describe "decodeKey" $ do
     it "decode the Key into it's constituent parts" $ do
       (testDecodeKey == (Right exampleDirectedKey )) `shouldBe` True
     it "should go back and forth between decode and encode for all inputs" $ do
       property makeQCDirectedKey
+  describe "decodeFilename" $ do
+    it "should encode and decode the filename and be the same for a complicated key" $ do
+      let keys = ["!@#$%^&*(#$%^&*<><><>$$$h$$g$G$g$$$$$$$$$","$$$", "$$", "<<<<<", ">>>>>>>", "<><><<<<<>>><<<><><><>>>>", "", (C.unwords . (fmap (C.singleton . fst)) . M.toList $ toEscapedCharacters)]
+      (fmap (decodeFilename . parseFilename) keys) `shouldBe` keys
   -- describe "migrateKey" $ do
   --   it "should replace the source with the old dest and then replace the dest with a new dest" $ do  
   --     True `shouldBe` False
@@ -88,7 +94,7 @@ testEncodeKeyParg = encodeKeyPart exampleDirectedKey
 
 
 testDecodeKey :: (Either String (DirectedKeyRaw TestKey TestHost TestHost2 InitDate ))
-testDecodeKey = decodeKey "AAAAAAAAAEgfiwgAAAAAAAAD0zhSJHBtgYUdAwSIlJeX6yUmJhfrlhbrJefnWlkYWBhA5YTBcrmJVfl5cKmMpXNnm9z5wgkAlPPJ7kcAAAA="
+testDecodeKey = decodeKey "AAAAAAAAAEkfiwgAAAAAAAAD0zhSJHBtgYUdAwQIGloa6RmaWegZ6hkbWlkYWBhAJQQMDfTMDPUsjPQsLMDiGUvnzja584UTAP74XXJBAAAA" -- old test string "AAAAAAAAAEgfiwgAAAAAAAAD0zhSJHBtgYUdAwSIlJeX6yUmJhfrlhbrJefnWlkYWBhA5YTBcrmJVfl5cKmMpXNnm9z5wgkAlPPJ7kcAAAA="
 
 {-|
 
