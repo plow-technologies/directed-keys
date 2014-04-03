@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric, NoMonomorphismRestriction, RecordWildCards #-}
+{-# LANGUAGE DeriveGeneric, NoMonomorphismRestriction, RecordWildCards, OverloadedStrings #-}
 
 module DirectedKeys (
 encodeKeyRaw
@@ -7,6 +7,10 @@ encodeKeyRaw
 
 ,decodeKey 
 ,decodeKeyPart
+,toEscapedCharacters
+,parseFilename
+,decodeFilename
+,
 ) where
 
 import qualified Data.Serialize as S
@@ -15,6 +19,8 @@ import Codec.Compression.GZip
 import qualified Data.ByteString.Lazy as BSL
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Base64.URL as BS_Url
+import qualified Data.Map as M
+import qualified Data.ByteString.Char8 as C
 --import Data.Compressed.LZ78
 -- import DirectedKeys.Internal
 
@@ -57,3 +63,46 @@ decodeKey bs = do
     where
       dkGet = S.get :: S.Get DirectedKey
       getDKLazy dk = (BSL.fromStrict . getDKString $ dk)  
+
+
+parseFilename :: C.ByteString -> C.ByteString
+parseFilename  = C.foldl' replaceInMap C.empty
+
+replaceInMap :: C.ByteString -> Char -> C.ByteString
+replaceInMap accum c =
+  case mVal of
+    Nothing -> C.append accum (C.singleton c)
+    Just val -> C.append accum val
+  where
+    mVal = M.lookup c toEscapedCharacters
+
+decodeFilename :: C.ByteString -> C.ByteString
+decodeFilename input
+  | C.null input = C.empty
+  | otherwise = finish f1 f2
+      where 
+        (f1,f2) = C.foldl' replaceFromMap (C.singleton . C.head $ input, C.empty) (C.tail input)
+        finish f f' 
+          | C.length f == 2 = C.append f' $ maybe f (\x -> C.singleton x) $ M.lookup f fromEscapedCharacters  
+          | otherwise = C.append f' f 
+replaceFromMap :: (C.ByteString, C.ByteString) -- the last character of the bytestring that was seen and the accumulator
+                   -> Char             -- newest character of the bytestring
+                   -> (C.ByteString ,C.ByteString)
+replaceFromMap (lookupString, accum) c 
+  |C.null lookupString = (C.singleton c, accum)
+  |C.length lookupString == 2 = let mVal = M.lookup lookupString fromEscapedCharacters 
+                                in case mVal of
+                                        Nothing -> (C.append (C.tail lookupString) (C.singleton c), (C.append accum (C.init lookupString)))
+                                        Just val -> (C.singleton c , (C.append accum (C.singleton val))) --(C.append accum (C.singleton val)))
+             
+  |otherwise = (C.append lookupString (C.singleton c), accum)
+
+toEscapedCharacters :: M.Map Char C.ByteString
+toEscapedCharacters = M.fromList [('$', "$$"),('?', "$q"),('>', "$g"),('<', "$l"), ('%',"$p"),('*',"$a"),(':',"$c"),('|',"$d"),('\\', "$b"),('/',"$f"), ('|',"$i")]
+
+fromEscapedCharacters :: M.Map C.ByteString Char
+fromEscapedCharacters = reverseMap toEscapedCharacters
+
+
+reverseMap :: M.Map Char C.ByteString -> M.Map C.ByteString Char
+reverseMap m = M.fromList [(b,a) | (a,b) <- M.toList m]
