@@ -1,5 +1,5 @@
 Name:                   directed-keys
-Version:                0.1.1.1
+Version:                0.1.2.1
 Author:                 Jeremy <jeremy.peterson@plowtech.net>
 Maintainer:             Jeremy <jeremy.peterson@plowtech.net>
 License:                BSD3
@@ -36,7 +36,7 @@ Test-Suite spec
                       , hspec
                       , bytestring == 0.10.0.2
                       , base64-bytestring == 1.0.0.1
-                      , QuickCheckxsx
+                      , QuickCheck
                       , cereal == 0.4.0.1
 --                      , compressed == 3.10
                       , zlib == 0.5.4.1

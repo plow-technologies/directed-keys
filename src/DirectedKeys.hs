@@ -4,13 +4,11 @@ module DirectedKeys (
 encodeKeyRaw
 ,encodeKey
 ,encodeKeyPart
-
 ,decodeKey 
 ,decodeKeyPart
 ,toEscapedCharacters
 ,parseFilename
 ,decodeFilename
-,
 ) where
 
 import qualified Data.Serialize as S
