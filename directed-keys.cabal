@@ -1,5 +1,5 @@
 Name:                   directed-keys
-Version:                0.1.1
+Version:                0.2.0
 Author:                 Jeremy <jeremy.peterson@plowtech.net>
 Maintainer:             Jeremy <jeremy.peterson@plowtech.net>
 License:                BSD3
@@ -17,12 +17,12 @@ Library
                         DirectedKeys.Types
   Other-Modules:        DirectedKeys.Internal
   Build-Depends:        base >= 4 && < 5
-                      , base64-bytestring == 1.0.0.1
-                      , cereal == 0.4.0.1
-                      , compressed == 3.10
-                      , bytestring == 0.10.0.2
-                      , zlib == 0.5.4.1
-                      , containers == 0.5.0.0
+                      , base64-bytestring >= 1.0.0.1
+                      , cereal >= 0.4.0.1
+                      , compressed >= 3.10
+                      , bytestring >= 0.10.0.2
+                      , zlib >= 0.5.4.1
+                      , containers >= 0.5.0.0
 
 
 Test-Suite spec
@@ -35,13 +35,13 @@ Test-Suite spec
   Main-Is:              Spec.hs
   Build-Depends:        base
                       , hspec
-                      , bytestring == 0.10.0.2
-                      , base64-bytestring == 1.0.0.1
-                      , QuickCheckxsx
-                      , cereal == 0.4.0.1
-                      , compressed == 3.10
-                      , zlib == 0.5.4.1
-                      , containers == 0.5.0.0
+                      , bytestring
+                      , base64-bytestring 
+                      , QuickCheck
+                      , cereal
+                      , compressed 
+                      , zlib 
+                      , containers 
 
 
 Source-Repository head
