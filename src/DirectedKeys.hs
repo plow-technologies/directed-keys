@@ -4,13 +4,11 @@ module DirectedKeys (
 encodeKeyRaw
 ,encodeKey
 ,encodeKeyPart
-
 ,decodeKey 
 ,decodeKeyPart
 ,toEscapedCharacters
 ,parseFilename
 ,decodeFilename
-,
 ) where
 
 import qualified Data.Serialize as S
@@ -34,11 +32,13 @@ encodeKeyRaw :: ( S.Serialize key, S.Serialize source, S.Serialize destination, 
 encodeKeyRaw key source destination datetime = DKeyRaw  key source destination datetime
 
 
-
+-- encode without converting to base 64
 encodeKeyPart :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) =>  (DirectedKeyRaw key source destination datetime) -> BS.ByteString
 encodeKeyPart (DKeyRaw k s d dt) = S.runPut $ S.put . DK . BSL.toStrict .  compress. S.runPutLazy. S.put $ encodeKeyRaw k s d dt
 
 
+
+-- Make into base 64
 encodeKey :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) =>  (DirectedKeyRaw key source destination datetime) -> BS.ByteString
 encodeKey (DKeyRaw k s d dt) = BS_Url.encode . S.runPut $ S.put . DK . BSL.toStrict .  compress. S.runPutLazy. S.put $ encodeKeyRaw k s d dt
 
@@ -53,8 +53,6 @@ decodeKeyPart dkbs = do
       getDKLazy dk = (BSL.fromStrict . getDKString $ dk)  
 
 
-
-
 decodeKey :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) => BS.ByteString -> (Either String (DirectedKeyRaw key source destination datetime ))
 decodeKey bs = do
   dkbs <- BS_Url.decode bs
@@ -65,6 +63,8 @@ decodeKey bs = do
       getDKLazy dk = (BSL.fromStrict . getDKString $ dk)  
 
 
+
+-- | Use this function to create a filename from a bytestring, it escapes all invalid unix filename characters
 parseFilename :: C.ByteString -> C.ByteString
 parseFilename  = C.foldl' replaceInMap C.empty
 
@@ -76,6 +76,9 @@ replaceInMap accum c =
   where
     mVal = M.lookup c toEscapedCharacters
 
+
+
+-- | decodeFilename  returns a Bytestring that has unescaped all the characters for filenames
 decodeFilename :: C.ByteString -> C.ByteString
 decodeFilename input
   | C.null input = C.empty

@@ -1,11 +1,7 @@
 # directed-keys
 
-TODO: Write description here
-
-## Installation
-
-TODO: Write installation instructions here
-
+Directed Keys consists of two parts, first a set of functions for encoding base-64 encoded values that can be used as keys.
+Second, a destination selector that takes a list of max bound and destinations... returns a destination for any key in these ranges
 
 ## How to run tests
 
@@ -13,18 +9,11 @@ TODO: Write installation instructions here
 cabal configure --enable-tests && cabal build && cabal test
 ```
 
-## Contributing
-
-TODO: Write contribution instructions here
-
-
 ## Usage
 
 ``` haskell
 
 import DirectedKeys
-
-
 
 -- |Instances Ord, Eq, Generic
 

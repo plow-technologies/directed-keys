@@ -1,5 +1,6 @@
 Name:                   directed-keys
-Version:                0.2.0
+
+Version:                0.2.1
 Author:                 Jeremy <jeremy.peterson@plowtech.net>
 Maintainer:             Jeremy <jeremy.peterson@plowtech.net>
 License:                BSD3
@@ -15,6 +16,7 @@ Library
   GHC-Options:          -Wall
   Exposed-Modules:      DirectedKeys
                         DirectedKeys.Types
+                        DirectedKeys.Router
   Other-Modules:        DirectedKeys.Internal
   Build-Depends:        base >= 4 && < 5
                       , base64-bytestring >= 1.0.0.1
@@ -41,6 +43,13 @@ Test-Suite spec
                       , cereal
                       , compressed 
                       , zlib 
+                      , containers 
+                      , bytestring 
+                      , base64-bytestring
+                      , QuickCheck
+                      , cereal 
+
+                      , zlib
                       , containers 
 
 
