@@ -24,6 +24,8 @@ Change Log
 +  0.2.1
    relaxed containers restriction,
    ready for ghc 7.8
++  0.2.0
+ revisions for ghc 7.8.2
 +  0.1.3
  updated to strict Bytestring
  
