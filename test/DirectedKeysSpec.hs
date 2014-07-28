@@ -9,6 +9,7 @@ import qualified Data.ByteString.Char8 as C
 import DirectedKeys
 import Test.QuickCheck
 import Test.Hspec
+import Data.List
 
 main :: IO ()
 main = hspec spec
@@ -56,6 +57,16 @@ makeQCDirectedKey i j k l = let ky = TKey ( i )
                                 dkr = DKeyRaw ky s s2 dt 
                             in (decodeKey.encodeKey $ dkr) == (Right dkr )
     
+
+ 
+makeSimpleDuplicatesTestDirectedKey = let s = Host1 (show "www.aacs-us.com") 
+                                          s2 = Host2(show "www.aacs-us.com") 
+                                          dt = IDate (3)
+                                          dkr ky = DKeyRaw (TKey  ky )  s s2 dt
+                                          dkrslt = fmap (encodeKey.dkr)  [1 .. 200000]
+                                      in (filter (\lst -> length lst > 1)).group $ dkrslt
+                               
+                               
 
 
 
