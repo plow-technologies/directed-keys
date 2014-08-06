@@ -3,6 +3,7 @@ module DirectedKeys.Router (
   fromList
   , makeDestFcn
   , KeyRouteLookupTable
+  , fromListWithMap
 ) where 
 
 
