@@ -111,7 +111,7 @@ testEncodeKeyParg = encodeKeyPart exampleDirectedKey
 
 
 testDecodeKey :: (Either String (DirectedKeyRaw TestKey TestHost TestHost2 InitDate ))
-testDecodeKey = decodeKey "AAAAAAAAAEkfiwgAAAAAAAAD0zhSJHBtgYUdAwQIGloa6RmaWegZ6hkbWlkYWBhAJQQMDfTMDPUsjPQsLMDiGUvnzja584UTAP74XXJBAAAA" -- old test string "AAAAAAAAAEgfiwgAAAAAAAAD0zhSJHBtgYUdAwSIlJeX6yUmJhfrlhbrJefnWlkYWBhA5YTBcrmJVfl5cKmMpXNnm9z5wgkAlPPJ7kcAAAA="
+testDecodeKey = decodeKey "AAAAAAAAAEkfiwgAAAAAAAAD0zhSJHBtgYUdAwQIGloa6RmaWegZ6hkbWlkYWBhAJQQMDfTMDPUsjPQsLMDiGUvnzja584UTAP74XXJBAAAA" 
 
 testSerializationIsStableOverTime
   :: IO
