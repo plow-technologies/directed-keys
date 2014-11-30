@@ -3,6 +3,7 @@ module DirectedKeys.Router (
   fromList
   , makeDestFcn
   , KeyRouteLookupTable
+  , fromListWithMap
 ) where 
 
 
@@ -12,6 +13,8 @@ import Control.Applicative
 import GHC.Generics
 import Data.Serialize
 import qualified Data.Set as S
+import qualified Data.Map as M
+import Data.Maybe
 
 
 {-|
@@ -44,20 +47,32 @@ data KeyRouteBoundDouble a b = KeyRouteBoundDouble { rbtMax :: a , rbtDest :: b}
 
 data KeyRouteLookupTable a b =  KeyRouteLookupTable {
   getSet :: S.Set (KeyRouteBoundDouble a b)
+, getLookupMap :: M.Map a b
   }
 
 -- |Build a 
 fromList :: (Ord a, Ord b, Monoid b) => [(a,b)] -> (KeyRouteLookupTable a b)
-fromList lst = KeyRouteLookupTable { getSet = S.fromList (
+fromList lst  = KeyRouteLookupTable { getSet = S.fromList (
                                         (\(maxBound, targetDestination) ->
                                         KeyRouteBoundDouble {rbtMax = maxBound, rbtDest=targetDestination })
-                                        <$> lst)}
+                                        <$> lst), getLookupMap = M.empty}
+
+-- |Build a 
+fromListWithMap :: (Ord a, Ord b, Monoid b) => [(a,b)] -> M.Map a b -> (KeyRouteLookupTable a b)
+fromListWithMap lst m = KeyRouteLookupTable { getSet = S.fromList (
+                                        (\(maxBound, targetDestination) ->
+                                        KeyRouteBoundDouble {rbtMax = maxBound, rbtDest=targetDestination })
+                                        <$> lst)
+                                      ,getLookupMap = m}
 
 makeDestFcn :: (Ord a, Ord b, Monoid b) =>
                KeyRouteLookupTable a b ->
                (a ->  (Maybe b))
-makeDestFcn krlt incoming = findMaxBound dummyI
+makeDestFcn krlt incoming = case M.lookup incoming kbMap of
+                                    (Just res) -> Just res
+                                    Nothing -> findMaxBound $ dummyI
   where
     findMaxBound i = rbtDest <$> (S.lookupGE i kbSet)
+    kbMap = getLookupMap krlt
     kbSet = getSet krlt
     dummyI = KeyRouteBoundDouble {rbtMax=incoming, rbtDest= mempty}
