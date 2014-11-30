@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveGeneric, NoMonomorphismRestriction, RecordWildCards, OverloadedStrings #-}
+{-# LANGUAGE NoMonomorphismRestriction, OverloadedStrings #-}
 
 module DirectedKeys (
 encodeKeyRaw
@@ -19,8 +19,6 @@ import qualified Data.ByteString as BS
 import qualified Data.ByteString.Base64.URL as BS_Url
 import qualified Data.Map as M
 import qualified Data.ByteString.Char8 as C
---import Data.Compressed.LZ78
--- import DirectedKeys.Internal
 
 
 encodeKeyRaw :: ( S.Serialize key, S.Serialize source, S.Serialize destination, S.Serialize datetime) => 
@@ -29,17 +27,19 @@ encodeKeyRaw :: ( S.Serialize key, S.Serialize source, S.Serialize destination, 
                 destination -> 
                 datetime -> 
                 DirectedKeyRaw key source destination datetime
-encodeKeyRaw key source destination datetime = DKeyRaw  key source destination datetime
+encodeKeyRaw = DKeyRaw  
 
 
 -- encode without converting to base 64
-encodeKeyPart :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) =>  (DirectedKeyRaw key source destination datetime) -> BS.ByteString
+encodeKeyPart :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) =>  
+                 DirectedKeyRaw key source destination datetime -> BS.ByteString
 encodeKeyPart (DKeyRaw k s d dt) = S.runPut $ S.put . DK . BSL.toStrict .  compress. S.runPutLazy. S.put $ encodeKeyRaw k s d dt
 
 
 
 -- Make into base 64
-encodeKey :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) =>  (DirectedKeyRaw key source destination datetime) -> BS.ByteString
+encodeKey :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) =>  
+             DirectedKeyRaw key source destination datetime -> BS.ByteString
 encodeKey (DKeyRaw k s d dt) = BS_Url.encode . S.runPut $ S.put . DK . BSL.toStrict .  compress. S.runPutLazy. S.put $ encodeKeyRaw k s d dt
 
 

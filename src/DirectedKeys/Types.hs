@@ -9,10 +9,10 @@ import Data.Serialize
 import Data.ByteString
 
 data DirectedKeyRaw skey src dst datetime = DKeyRaw { 
-      getSimpleKey :: skey      
-      ,getSource   :: src    
-      ,getDest     :: dst 
-      ,getDateTime :: datetime     
+      getSimpleKey :: !skey      
+      ,getSource   :: !src    
+      ,getDest     :: !dst 
+      ,getDateTime :: !datetime     
 
 } deriving (Eq,Ord,Generic) 
 

@@ -44,7 +44,7 @@ spec = do
 
 newtype TestKey = TKey Int         deriving (Eq,Ord,Generic) 
 newtype TestHost = Host1 String    deriving (Eq,Ord,Generic)      
-newtype TestHost2 = Host2 String   deriving (Eq,Ord,Generic)       
+newtype TestHost2 = Host2 String   deriving (Eq,Ord,Generic,Show)       
 newtype InitDate = IDate Int       deriving (Eq,Ord,Generic)  
 
 
