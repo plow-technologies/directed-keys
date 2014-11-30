@@ -38,7 +38,8 @@ Test-Suite spec
   Build-Depends:        base
                       , hspec
                       , bytestring
-                      , base64-bytestring 
+g                      , base64-bytestring 
+                      , serial-test-generators >= 0.1.2 && < 0.2.2
                       , QuickCheck
                       , cereal
                       , compressed 

@@ -3,6 +3,8 @@ module DirectedKeysSpec (main, spec) where
 import DirectedKeys.Types
 import GHC.Generics
 import Data.Serialize
+import Control.Applicative ((<$>))
+import Test.Serial
 import qualified Data.Map as M
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as C
@@ -27,7 +29,11 @@ spec = do
 
   describe "encodeKey" $ do
     it "turn the given Key parameters into a Serialized and compressed DirectedKey" $ do
-      testEncodeKey `shouldBe` "AAAAAAAAAEkfiwgAAAAAAAAD0zhSJHBtgYUdAwQIGloa6RmaWegZ6hkbWlkYWBhAJQQMDfTMDPUsjPQsLMDiGUvnzja584UTAP74XXJBAAAA" -- old test string "AAAAAAAAAEgfiwgAAAAAAAAD0zhSJHBtgYUdAwSIlJeX6yUmJhfrlhbrJefnWlkYWBhA5YTBcrmJVfl5cKmMpXNnm9z5wgkAlPPJ7kcAAAA="
+      testEncodeKey `shouldBe` "AAAAAAAAAEkfiwgAAAAAAAAD0zhSJHBtgYUdAwQIGloa6RmaWegZ6hkbWlkYWBhAJQQMDfTMDPUsjPQsLMDiGUvnzja584UTAP74XXJBAAAA" 
+  describe "testSerializationIsStableOverTime" $ do 
+    it "should return the same serializaiton over time" $ do rslt <- testSerializationIsStableOverTime 
+                                                             ((== exampleDirectedKey) <$> rslt) `shouldBe` (Right True)
+
 
   describe "decodeKey" $ do
     it "decode the Key into it's constituent parts" $ do
@@ -106,6 +112,12 @@ testEncodeKeyParg = encodeKeyPart exampleDirectedKey
 
 testDecodeKey :: (Either String (DirectedKeyRaw TestKey TestHost TestHost2 InitDate ))
 testDecodeKey = decodeKey "AAAAAAAAAEkfiwgAAAAAAAAD0zhSJHBtgYUdAwQIGloa6RmaWegZ6hkbWlkYWBhAJQQMDfTMDPUsjPQsLMDiGUvnzja584UTAP74XXJBAAAA" -- old test string "AAAAAAAAAEgfiwgAAAAAAAAD0zhSJHBtgYUdAwSIlJeX6yUmJhfrlhbrJefnWlkYWBhA5YTBcrmJVfl5cKmMpXNnm9z5wgkAlPPJ7kcAAAA="
+
+testSerializationIsStableOverTime
+  :: IO
+       (Either
+          TestError (DirectedKeyRaw TestKey TestHost TestHost2 InitDate))
+testSerializationIsStableOverTime = runCerealSerializationTest exampleDirectedKey "serialize_stability_test"
 
 {-|
 
