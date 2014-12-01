@@ -1,3 +1,6 @@
+
+[![Circle CI](https://circleci.com/gh/plow-technologies/directed-keys/tree/master.svg?style=sheield)](https://circleci.com/gh/plow-technologies/directed-keys/tree/master)
+
 # directed-keys
 
 Directed Keys consists of two parts, first a set of functions for encoding base-64 encoded values that can be used as keys.
