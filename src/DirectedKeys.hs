@@ -17,7 +17,7 @@ import Codec.Compression.GZip
 import qualified Data.ByteString.Lazy as BSL
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Base64.URL as BS_Url
-import qualified Data.Map as M
+import qualified Data.Map.Strict as M
 import qualified Data.ByteString.Char8 as C
 
 
@@ -44,24 +44,26 @@ encodeKey (DKeyRaw k s d dt) = BS_Url.encode . S.runPut $ S.put . DK . BSL.toStr
 
 
 
-decodeKeyPart :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) => BS.ByteString -> (Either String (DirectedKeyRaw key source destination datetime ))
+decodeKeyPart :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) => BS.ByteString -> 
+                 Either String (DirectedKeyRaw key source destination datetime )
 decodeKeyPart dkbs = do
-  dk <- (S.runGet dkGet dkbs)
-  (S.runGet S.get $ BSL.toStrict.decompress . getDKLazy $ dk)
-    where
-      dkGet = S.get :: S.Get DirectedKey
-      getDKLazy dk = (BSL.fromStrict . getDKString $ dk)  
+  dk <- S.runGet dkGet dkbs
+  S.runGet S.get $ BSL.toStrict.decompress . getDKLazy $ dk
 
 
-decodeKey :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) => BS.ByteString -> (Either String (DirectedKeyRaw key source destination datetime ))
+decodeKey :: (S.Serialize key, S.Serialize source, S.Serialize destination,  S.Serialize datetime) => BS.ByteString -> 
+             Either String (DirectedKeyRaw key source destination datetime )
 decodeKey bs = do
   dkbs <- BS_Url.decode bs
-  dk <- (S.runGet dkGet dkbs)
-  (S.runGet S.get $ BSL.toStrict.decompress . getDKLazy $ dk)
-    where
-      dkGet = S.get :: S.Get DirectedKey
-      getDKLazy dk = (BSL.fromStrict . getDKString $ dk)  
+  dk <- S.runGet dkGet dkbs
+  S.runGet S.get $ BSL.toStrict.decompress . getDKLazy $ dk
+      
 
+dkGet :: S.Get DirectedKey
+dkGet = S.get :: S.Get DirectedKey
+
+getDKLazy :: DirectedKey -> BSL.ByteString
+getDKLazy dk = BSL.fromStrict . getDKString $ dk
 
 
 -- | Use this function to create a filename from a bytestring, it escapes all invalid unix filename characters
@@ -88,6 +90,8 @@ decodeFilename input
         finish f f' 
           | C.length f == 2 = C.append f' $ maybe f (\x -> C.singleton x) $ M.lookup f fromEscapedCharacters  
           | otherwise = C.append f' f 
+
+
 replaceFromMap :: (C.ByteString, C.ByteString) -- the last character of the bytestring that was seen and the accumulator
                    -> Char             -- newest character of the bytestring
                    -> (C.ByteString ,C.ByteString)
@@ -95,9 +99,8 @@ replaceFromMap (lookupString, accum) c
   |C.null lookupString = (C.singleton c, accum)
   |C.length lookupString == 2 = let mVal = M.lookup lookupString fromEscapedCharacters 
                                 in case mVal of
-                                        Nothing -> (C.append (C.tail lookupString) (C.singleton c), (C.append accum (C.init lookupString)))
-                                        Just val -> (C.singleton c , (C.append accum (C.singleton val))) --(C.append accum (C.singleton val)))
-             
+                                     Nothing -> (C.append (C.tail lookupString) (C.singleton c), (C.append accum (C.init lookupString)))
+                                     Just val -> (C.singleton c , (C.append accum (C.singleton val)))              
   |otherwise = (C.append lookupString (C.singleton c), accum)
 
 toEscapedCharacters :: M.Map Char C.ByteString
