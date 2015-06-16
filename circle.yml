@@ -1,0 +1,22 @@
+machine:
+  ghc:
+    version: 7.10.1
+
+dependencies:
+  override:
+    - git clone git@github.com:plow-technologies/plow-scripts.git
+    - cp plow-scripts/config $HOME/.cabal/config
+    - cabal update
+    - cabal install --only-dependencies --enable-tests --force-reinstalls -j2
+
+test:
+  override:
+    - cabal configure --enable-tests
+    - cabal build
+    - cabal test
+
+deployment:
+  staging:
+    branch: master
+    commands:
+      - sh plow-scripts/hackage.sh
