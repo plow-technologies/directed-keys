@@ -18,7 +18,7 @@ Library
                         DirectedKeys.Types
                         DirectedKeys.Router
   Other-Modules:        DirectedKeys.Internal
-  Build-Depends:        base
+  Build-Depends:        base >= 4 && < 5
                       , base64-bytestring
                       , hashable
                       , cereal
@@ -36,7 +36,7 @@ Test-Suite spec
 
   Ghc-Options:          -Wall
   Main-Is:              Spec.hs
-  Build-Depends:        base
+  Build-Depends:        base >= 4 && < 5
                       , hspec
                       , bytestring
                       , base64-bytestring
