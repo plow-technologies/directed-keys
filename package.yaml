@@ -1,0 +1,52 @@
+name: directed-keys
+version: '0.5.0.0'
+synopsis: Converts a simple key, source, destination, and datetime to a DirectedKey
+description: README.md
+category: Data
+author: Jeremey Peterson
+maintainer: jeremy.peterson@plowtech.net
+copyright: 2017 Plow Technologies
+license: BSD3
+github: plow-technologies/directed-keys
+
+library:
+  source-dirs: src
+  exposed-modules: 
+  - DirectedKeys
+  - DirectedKeys.Types
+  - DirectedKeys.Router
+  dependencies:
+  - base >= 4.7 && < 5
+  - base64-bytestring
+  - bytestring
+  - cereal
+  - compressed
+  - containers
+  - hashable
+  - zlib
+  ghc-options:
+  - -Wall
+  - -Werror
+
+tests:
+  spec:
+    source-dirs: test
+    main: Spec.hs
+    other-modules:
+    - DirectedKeysSpec
+    - DirectedKeys.RouterSpec
+    dependencies:
+    - base >= 4.7 && < 5
+    - hspec
+    - bytestring
+    - base64-bytestring
+    - cereal
+    - compressed
+    - containers
+    - directed-keys
+    - hashable
+    - QuickCheck
+    - serial-test-generators
+    - zlib
+    ghc-options:
+    - -Wall    
