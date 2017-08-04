@@ -1,12 +1,13 @@
-{-# LANGUAGE OverloadedStrings,  RecordWildCards, DeriveGeneric #-}
-module DirectedKeys.RouterSpec ( main , spec) where 
+{-# LANGUAGE OverloadedStrings #-}
 
-import DirectedKeys.Router
-import Test.QuickCheck
-import Test.Hspec
-import Control.Applicative
+module DirectedKeys.RouterSpec ( 
+    main 
+  , spec
+  ) where 
+
 import Data.Maybe
-
+import DirectedKeys.Router
+import Test.Hspec
 
 main :: IO ()
 main = hspec spec
@@ -31,6 +32,7 @@ testKeyList = [ (10,"www.aacs-us.com:2233")
               , (30,"www.aacs-us.com:2235")
               , (40,"www.aacs-us.com:2236")]
 
-
-testDestFcn = let krlt = (fromList testKeyList)
-              in  makeDestFcn krlt 
+testDestFcn :: Int -> Maybe String
+testDestFcn = 
+  let krlt = (fromList testKeyList)
+  in  makeDestFcn krlt 

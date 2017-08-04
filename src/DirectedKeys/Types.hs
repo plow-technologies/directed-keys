@@ -1,35 +1,50 @@
-{-# LANGUAGE OverloadedStrings, NoImplicitPrelude, RecordWildCards, DeriveGeneric #-}
-module DirectedKeys.Types (DirectedKeyRaw(..)
-                         , DirectedKey (..) 
-) where 
+{-|
+Module      : DirectedKeys.Types
+Description : Short description
+Copyright   : (c) Plow Technologies, 2017
+License     : BSD3
+Maintainer  : jeremy.peterson@plowtech.net
+Stability   : beta
 
-import Prelude (Eq, Ord) 
-import GHC.Generics 
-import Data.Serialize
+-}
+
+{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-} 
+{-# LANGUAGE RecordWildCards   #-} 
+
+module DirectedKeys.Types (
+    DirectedKeyRaw (..)
+  , DirectedKey (..) 
+  ) where 
+
 import Data.ByteString
 import Data.Hashable
+import Data.Serialize
+import GHC.Generics 
+import Prelude (Eq, Ord) 
 
-data DirectedKeyRaw skey src dst datetime = DKeyRaw { 
-      getSimpleKey :: !skey      
-      ,getSource   :: !src    
-      ,getDest     :: !dst 
-      ,getDateTime :: !datetime     
+-- | Data type to hold a generic grouping of a key, data source, destination 
+-- source and time.
+data DirectedKeyRaw skey src dst datetime = 
+  DKeyRaw 
+    { getSimpleKey :: !skey      
+    , getSource    :: !src    
+    , getDest      :: !dst 
+    , getDateTime  :: !datetime     
+    } deriving (Eq,Ord,Generic) 
 
-} deriving (Eq,Ord,Generic) 
+instance (Serialize a, Serialize b, Serialize c, Serialize d) 
+  => Serialize (DirectedKeyRaw a b c d)
 
+instance (Hashable a, Hashable b, Hashable c, Hashable d) 
+  => Hashable (DirectedKeyRaw a b c d)
 
+-- | Stores the value of 'DirectedKeyRaw' as a 'ByteString'.
+newtype DirectedKey = DK 
+  { getDKString :: ByteString
+  } deriving (Eq,Ord,Generic) 
 
--- | This instance defines how the data becomes serialized
-instance (Serialize a,Serialize b ,Serialize c,Serialize d) => Serialize (DirectedKeyRaw a b c d ) where 
+instance Serialize DirectedKey
 
-instance (Hashable a,Hashable b ,Hashable c,Hashable d) => Hashable (DirectedKeyRaw a b c d ) where 
-
-newtype DirectedKey = DK {getDKString :: ByteString} 
-  deriving (Eq,Ord,Generic) 
-
-instance Serialize DirectedKey where 
-
-instance Hashable DirectedKey where 
-
-
-
+instance Hashable DirectedKey
