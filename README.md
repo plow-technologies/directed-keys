@@ -1,5 +1,5 @@
-
-# directed-keys [![Circle CI](https://circleci.com/gh/plow-technologies/directed-keys/tree/master.svg?style=shield&circle-token=8861d4927e944849b7cfdf99211c4f68d1921e36)](https://circleci.com/gh/plow-technologies/directed-keys/tree/master)
+[![Build Status](https://jenkins.plowtech.net/buildStatus/icon?job=directed-keys)](https://jenkins.plowtech.net/view/master/job/directed-keys/)
+# directed-keys
 
 Directed Keys consists of two parts, first a set of functions for encoding base-64 encoded values that can be used as keys.
 Second, a destination selector that takes a list of max bound and destinations... returns a destination for any key in these ranges
