@@ -1,4 +1,4 @@
-[![Build Status](https://jenkins.plowtech.net/buildStatus/icon?job=directed-keys)](https://jenkins.plowtech.net/view/master/job/directed-keys/)
+
 # directed-keys
 
 Directed Keys consists of two parts, first a set of functions for encoding base-64 encoded values that can be used as keys.
