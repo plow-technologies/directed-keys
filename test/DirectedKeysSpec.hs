@@ -1,4 +1,9 @@
-{-# LANGUAGE DeriveGeneric, OverloadedStrings, NoMonomorphismRestriction #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE TypeApplications #-}
+{-# OPTIONS_GHC -Wno-overflowed-literals #-}
+
 module DirectedKeysSpec (main, spec) where
 import DirectedKeys.Types
 import GHC.Generics
@@ -64,15 +69,14 @@ makeQCDirectedKey i j k l = let ky = TKey ( i )
                             in (decodeKey.encodeKey $ dkr) == (Right dkr )
     
 
- 
-makeSimpleDuplicatesTestDirectedKey = let s = Host1 (show "www.aacs-us.com") 
-                                          s2 = Host2(show "www.aacs-us.com") 
-                                          dt = IDate (3)
-                                          dkr ky = DKeyRaw (TKey  ky )  s s2 dt
-                                          dkrslt = fmap (encodeKey.dkr)  [1 .. 200000]
-                                      in (filter (\lst -> length lst > 1)).group $ dkrslt
-                               
-                               
+_makeSimpleDuplicatesTestDirectedKey :: [[C.ByteString]]
+_makeSimpleDuplicatesTestDirectedKey =
+  let s = Host1 (show @String "www.aacs-us.com") 
+      s2 = Host2(show @String "www.aacs-us.com") 
+      dt = IDate (3)
+      dkr ky = DKeyRaw (TKey  ky )  s s2 dt
+      dkrslt = fmap (encodeKey.dkr)  [1 .. 200000]
+  in (filter (\lst -> length lst > 1)).group $ dkrslt
 
 
 
@@ -106,8 +110,8 @@ exampleDirectedKey = DKeyRaw {
 testEncodeKey :: BS.ByteString 
 testEncodeKey = encodeKey exampleDirectedKey
 
-testEncodeKeyParg :: BS.ByteString 
-testEncodeKeyParg = encodeKeyPart exampleDirectedKey
+_testEncodeKeyParg :: BS.ByteString 
+_testEncodeKeyParg = encodeKeyPart exampleDirectedKey
 
 
 testDecodeKey :: (Either String (DirectedKeyRaw TestKey TestHost TestHost2 InitDate ))

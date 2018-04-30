@@ -2,9 +2,7 @@
 module DirectedKeys.RouterSpec ( main , spec) where 
 
 import DirectedKeys.Router
-import Test.QuickCheck
 import Test.Hspec
-import Control.Applicative
 import Data.Maybe
 
 
@@ -31,6 +29,6 @@ testKeyList = [ (10,"www.aacs-us.com:2233")
               , (30,"www.aacs-us.com:2235")
               , (40,"www.aacs-us.com:2236")]
 
-
+testDestFcn :: Int -> Maybe String
 testDestFcn = let krlt = (fromList testKeyList)
               in  makeDestFcn krlt 
