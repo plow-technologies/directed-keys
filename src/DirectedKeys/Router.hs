@@ -7,11 +7,10 @@ module DirectedKeys.Router (
 ) where 
 
 
-import Prelude (Eq, Ord,Show,undefined,($),Maybe)
+import Prelude (Eq, Ord,Show,($),Maybe)
 import Data.Monoid 
 import Control.Applicative
 import GHC.Generics
-import Data.Serialize
 import qualified Data.Set as S
 import qualified Data.Map as M
 import Data.Maybe

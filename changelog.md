@@ -11,12 +11,14 @@ Change Log
 
 *For complete history please view commit log*
 
-##Current Version 0.3.1
+##Current Version 0.5.0
 --------------------------	
 
 
 
 *Change History*
++  0.5.0
+   update to GHC 8.2.2
 +  0.3.1
    added a hashable requirement in addition to the serialize requirements.
    this shouldn't be a problem for most things
