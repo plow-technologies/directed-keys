@@ -13,6 +13,7 @@ dependencies:
 - cereal
 - compressed
 - containers
+- deepseq
 - hashable
 - zlib
 library:
