@@ -11,3 +11,6 @@ cabal-dev
 .cabal-sandbox/
 cabal.sandbox.config
 *.cabal
+
+.stack-work/
+global-stack.yaml
