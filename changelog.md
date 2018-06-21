@@ -17,6 +17,8 @@ Change Log
 
 
 *Change History*
++  0.5.1
+   Add DeepSeq.NFData instances
 +  0.5.0
    update to GHC 8.2.2
 +  0.3.1
